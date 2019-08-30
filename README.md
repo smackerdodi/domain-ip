@@ -7,7 +7,7 @@ git clone https://github.com/smackerdodi/domain-ip.git
 
 cd domain-ip
 
-pip3 install -r requirements
+pip3 install -r requirements.txt
 # Usage 
 python3 domain-ip.py subd.txt domain-ip.txt
 
