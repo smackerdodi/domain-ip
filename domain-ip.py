@@ -1,9 +1,9 @@
-import socket
-import sys 
-import colorama
+import concurrent.futures
+import requests
+import threading
+import sys
 import time
 from colorama import Fore, Style
-from requests.exceptions import ConnectionError
 print(Style.BRIGHT + Fore.CYAN + '''/
 
                           _                _           _ _ 
@@ -23,32 +23,31 @@ for i in range(5,0,-1):
     print(str(i) + i * " . ") 
 inputfile=sys.argv[1]
 outputfile=sys.argv[2]
-subfile=open(inputfile, "r")
 output=open(outputfile, "a")
-count = len(open(inputfile).readlines(  ))
-print('''
-
-''')
-print(Style.BRIGHT + Fore.WHITE + " the number of subdomain in input file is : " + Fore.YELLOW + str(count))
-print('''
-
-''')
-def getip(subd):
-	try:
-		req=socket.gethostbyname(subd)
-		socket.setdefaulttimeout(1)
-		res=subd + " : " + "(" + req + ")"
-		output.write(res+"\n")
-		print(Style.BRIGHT + Fore.WHITE + subd + Fore.RED + " : " + Fore.CYAN+ "(" + req + ")")
-	except socket.gaierror as err:
-		time.sleep(0.01)
+with open(inputfile, "r") as f:
+	inputurl = [line.rstrip() for line in f]
+threadLocal = threading.local()
+count = len(inputurl)
+print("number of subdomains = " + str(count))
+def get_session():
+    if not hasattr(threadLocal, "session"):
+        threadLocal.session = requests.Session()
+    return threadLocal.session
+def check_sub(url):
+	try :
+		res=requests.get(url, stream=True)
+		ip=res.raw._original_response.fp.raw._sock.getpeername()[0]
+		res2=url + " : " + str(ip)
+		print(Style.BRIGHT + Fore.WHITE + url[7:-1] + " : " + Fore.CYAN + str(ip))
+		output.write(res2[7:-1]+"\n")
+	except:
 		pass
-for sub in subfile:
-	if not sub.strip():
-		pass
-	else:
-		subd=sub.strip()
-		if subd[0] == "*" or subd[0] == ".":
-			pass
-		else:
-			getip(subd)	
+def itterate_url(inputurl):
+	url="http://"+inputurl
+	check_sub(url)
+if __name__ == "__main__":
+	start_time = time.time()
+	with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+       		executor.map(itterate_url, inputurl)
+	duration = time.time() - start_time
+	print("finished in : " + str(duration) + "  sec")
