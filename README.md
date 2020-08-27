@@ -1,7 +1,7 @@
 # domain-ip
 this tool take a list of subdomains and give you the ip for each 
 # Description 
-this tool take a list of subdomains from a text file and give out a list of domain versus ip for every subdomain ( if it is resolved )and the output is coloured to be easy for reading 
+this tool take a list of subdomains from a text file and give out a list of domain versus ip for every subdomain ( if it is resolved )and the output is coloured to be easy for reading and now it is multi threaded so it is now so fast  
 # installation 
 git clone https://github.com/smackerdodi/domain-ip.git
 
