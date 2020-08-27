@@ -47,7 +47,7 @@ def itterate_url(inputurl):
 	check_sub(url)
 if __name__ == "__main__":
 	start_time = time.time()
-	with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+	with concurrent.futures.ThreadPoolExecutor(max_workers=40) as executor:
        		executor.map(itterate_url, inputurl)
 	duration = time.time() - start_time
 	print("finished in : " + str(duration) + "  sec")
