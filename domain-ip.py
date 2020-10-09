@@ -38,8 +38,8 @@ def check_sub(url):
 		res=requests.get(url, stream=True)
 		ip=res.raw._original_response.fp.raw._sock.getpeername()[0]
 		res2=url + " : " + str(ip)
-		print(Style.BRIGHT + Fore.WHITE + url[7:-1] + " : " + Fore.CYAN + str(ip))
-		output.write(res2[7:-1]+"\n")
+		print(Style.BRIGHT + Fore.WHITE + url[7:] + " : " + Fore.CYAN + str(ip))
+		output.write(res2[7:]+"\n")
 	except:
 		pass
 def itterate_url(inputurl):
